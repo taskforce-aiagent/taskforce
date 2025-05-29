@@ -294,7 +294,7 @@ We welcome contributions! If you'd like to add a new tool, suggest a feature, or
 
 ## 📄 License
 
-MIT © [TaskForce Contributors](https://github.com/marcoaras)  
+MIT © [TaskForce Contributors](https://github.com/taskforce-aiagent/taskforce/graphs/contributors)
 _Created by [marcoaras](https://github.com/marcoaras)_
 
 ---
