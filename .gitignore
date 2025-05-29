@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.env
+.env.*
+coverage/
+*.tsbuildinfo
+
+# IDE/editor
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# MacOS
+.DS_Store
+
+# Test/coverage
+coverage/
+.nyc_output/
+jest-*
+
+# Build artifacts
+build/
+out/

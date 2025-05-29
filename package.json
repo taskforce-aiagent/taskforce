@@ -1,0 +1,86 @@
+{
+  "name": "taskforce",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:types": "tsc -p tsconfig.json"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "taskforce",
+    "autonomous",
+    "framework",
+    "multi-agent",
+    "llm",
+    "automation"
+  ],
+  "author": "TaskForce Contributors - Marcoaras",
+  "license": "MIT",
+  "description": "Core agent framework for building autonomous AI agents, tasks, and workflows.",
+  "devDependencies": {
+    "@types/chalk": "^0.4.31",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.15.24",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/pg": "^8.15.2",
+    "@types/puppeteer": "^5.4.7",
+    "@types/readline-sync": "^1.4.8",
+    "@types/xml2js": "^0.4.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@langchain/openai": "^0.5.10",
+    "@mozilla/readability": "^0.6.0",
+    "@octokit/rest": "^22.0.0",
+    "apify": "^3.4.2",
+    "axios": "^1.9.0",
+    "chalk": "^5.4.1",
+    "cheerio": "^1.0.0",
+    "chromadb": "^2.4.4",
+    "chromadb-default-embed": "^2.14.0",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.5.0",
+    "googleapis": "^149.0.0",
+    "jsdom": "^26.1.0",
+    "langchain": "^0.3.26",
+    "lru-cache": "^11.1.0",
+    "mammoth": "^1.9.1",
+    "openai": "^4.103.0",
+    "pdf-parse": "^1.1.1",
+    "pg": "^8.16.0",
+    "puppeteer": "^24.9.0",
+    "readline-sync": "^1.4.10",
+    "xml2js": "^0.6.2",
+    "zod": "^3.25.28",
+    "zod-to-json-schema": "^3.24.5"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taskforce-aiagent/taskforce.git"
+  },
+  "bugs": {
+    "url": "https://github.com/taskforce-aiagent/taskforce/issues"
+  },
+  "homepage": "https://github.com/taskforce-aiagent/taskforce#readme"
+}
