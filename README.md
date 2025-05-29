@@ -271,17 +271,6 @@ ToolRegistry.register(new DirectoryReadTool(), "file", "built-in");
 
 ---
 
-## 🚦 Roadmap
-
-- [ ] End-to-end demo projects & best-practice docs
-- [ ] UI/API layer, live orchestration, monitoring
-- [ ] Plugin & community ecosystem
-- [ ] Hybrid/multi-source RAG, advanced memory demos
-- [ ] Test coverage, edge-case handling
-- [ ] Dynamic prompt chaining, advanced AI-driven orchestration
-
----
-
 ## 🤝 Contributing
 
 We welcome contributions! If you'd like to add a new tool, suggest a feature, or report a bug:
