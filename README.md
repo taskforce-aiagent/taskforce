@@ -1,25 +1,25 @@
 # 🚀 TaskForce AI Agent Framework
 
 <p align="center">
-  <a href="https://github.com/marcoaras/taskforce">
-    <img src="https://img.shields.io/github/stars/marcoaras/taskforce?style=social" alt="GitHub Stars">
+  <a href="https://github.com/taskforce-aiagent/taskforce">
+    <img src="https://img.shields.io/github/stars/taskforce-aiagent/taskforce?style=social" alt="GitHub Stars">
   </a>
   <a href="https://www.npmjs.com/package/taskforce-agent">
     <img src="https://img.shields.io/npm/v/taskforce-agent" alt="npm version">
   </a>
-  <a href="https://github.com/marcoaras/taskforce/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/marcoaras/taskforce" alt="license">
+  <a href="https://github.com/taskforce-aiagent/taskforce/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/taskforce-aiagent/taskforce" alt="license">
   </a>
-  <a href="https://github.com/marcoaras/taskforce/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/marcoaras/taskforce/main.yml?branch=main" alt="build status">
+  <a href="https://github.com/taskforce-aiagent/taskforce/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/taskforce-aiagent/taskforce/main.yml?branch=main" alt="build status">
   </a>
-  <a href="https://codecov.io/gh/marcoaras/taskforce">
-    <img src="https://img.shields.io/codecov/c/github/marcoaras/taskforce" alt="coverage">
+  <a href="https://codecov.io/gh/taskforce-aiagent/taskforce">
+    <img src="https://img.shields.io/codecov/c/github/taskforce-aiagent/taskforce" alt="coverage">
   </a>
   <a href="https://github.com/marcoaras">
     <img src="https://img.shields.io/badge/creator-marcoaras-blue?logo=github" alt="creator">
   </a>
-  <a href="https://marcoaras.github.io/taskforce/">
+  <a href="https://taskforce-aiagent.github.io/taskforce/">
   <img src="https://img.shields.io/badge/docs-latest-blue" alt="docs">
 </a>
 </p>
