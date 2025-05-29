@@ -1,5 +1,5 @@
 {
-  "name": "taskforce",
+  "name": "taskforce-aiagent",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/cjs/index.js",

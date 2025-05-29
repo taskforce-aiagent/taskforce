@@ -1,25 +1,25 @@
 # 🚀 TaskForce AI Agent Framework
 
 <p align="center">
-  <a href="https://github.com/taskforce-aiagent/taskforce">
-    <img src="https://img.shields.io/github/stars/taskforce-aiagent/taskforce?style=social" alt="GitHub Stars">
+  <a href="https://github.com/taskforce-aiagent/taskforce-aiagent">
+    <img src="https://img.shields.io/github/stars/taskforce-aiagent/taskforce-aiagent?style=social" alt="GitHub Stars">
   </a>
   <a href="https://www.npmjs.com/package/taskforce-agent">
     <img src="https://img.shields.io/npm/v/taskforce-agent" alt="npm version">
   </a>
-  <a href="https://github.com/taskforce-aiagent/taskforce/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/taskforce-aiagent/taskforce" alt="license">
+  <a href="https://github.com/taskforce-aiagent/taskforce-aiagent/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/taskforce-aiagent/taskforce-aiagent" alt="license">
   </a>
-  <a href="https://github.com/taskforce-aiagent/taskforce/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/taskforce-aiagent/taskforce/main.yml?branch=main" alt="build status">
+  <a href="https://github.com/taskforce-aiagent/taskforce-aiagent/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/taskforce-aiagent/taskforce-aiagent/main.yml?branch=main" alt="build status">
   </a>
-  <a href="https://codecov.io/gh/taskforce-aiagent/taskforce">
-    <img src="https://img.shields.io/codecov/c/github/taskforce-aiagent/taskforce" alt="coverage">
+  <a href="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent">
+    <img src="https://img.shields.io/codecov/c/github/taskforce-aiagent/taskforce-aiagent" alt="coverage">
   </a>
   <a href="https://github.com/marcoaras">
     <img src="https://img.shields.io/badge/creator-marcoaras-blue?logo=github" alt="creator">
   </a>
-  <a href="https://taskforce-aiagent.github.io/taskforce/">
+  <a href="https://taskforce-aiagent.github.io/taskforce-aiagent/">
   <img src="https://img.shields.io/badge/docs-latest-blue" alt="docs">
 </a>
 </p>
