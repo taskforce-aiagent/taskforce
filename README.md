@@ -4,9 +4,9 @@
   <a href="https://github.com/taskforce-aiagent/taskforce-aiagent">
     <img src="https://img.shields.io/github/stars/taskforce-aiagent/taskforce-aiagent?style=social" alt="GitHub Stars">
   </a>
-  <a href="https://www.npmjs.com/package/taskforce-agent">
-    <img src="https://img.shields.io/npm/v/taskforce-agent" alt="npm version">
-  </a>
+  <a href="https://www.npmjs.com/package/taskforce-aiagent">
+  <img src="https://img.shields.io/npm/v/taskforce-aiagent" alt="npm version">
+</a>
   <a href="https://github.com/taskforce-aiagent/taskforce-aiagent/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/taskforce-aiagent/taskforce-aiagent" alt="license">
   </a>
