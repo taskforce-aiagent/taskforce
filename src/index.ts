@@ -1,5 +1,6 @@
 export { Agent } from "./agents/agent.js";
-export { Tool, InputSchema, LLMToolParameter } from "./tools/base/baseTool.js";
+export { Tool } from "./tools/base/baseTool.js";
+export type { InputSchema, LLMToolParameter } from "./tools/base/baseTool.js";
 export { ToolRegistry } from "./tools/base/toolRegistry.js";
 export { MemoryProvider } from "./memory/memoryFactory.js";
 export { Task } from "./tasks/task.js";
