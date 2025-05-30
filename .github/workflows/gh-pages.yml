@@ -8,7 +8,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -18,12 +17,17 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install dependencies
+      # 1) website/ klasörüne girip bağımlılıkları kur
+      - name: Install website dependencies
         run: npm ci
+        working-directory: ./website
 
-      - name: Build documentation
-        run: npm run docs:build
+      # 2) Docusaurus sitesini build et
+      - name: Build website
+        run: npm run build
+        working-directory: ./website
 
+      # 3) Elde edilen siteyi gh-pages dalına deploy et
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
