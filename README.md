@@ -7,6 +7,10 @@
   <a href="https://www.npmjs.com/package/taskforce-aiagent">
   <img src="https://img.shields.io/npm/v/taskforce-aiagent" alt="npm version">
 </a>
+ <a href="https://img.shields.io/npm/dm/taskforce-aiagent">
+  <img src="https://img.shields.io/npm/dm/taskforce-aiagent" alt="downloads">
+</a>
+
   <a href="https://github.com/taskforce-aiagent/taskforce-aiagent/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/taskforce-aiagent/taskforce-aiagent" alt="license">
   </a>
@@ -16,9 +20,6 @@
   <a href="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent">
     <img src="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent/branch/main/graph/badge.svg" alt="coverage">
   </a>
-  <a href="https://packagephobia.com/result?p=taskforce-aiagent">
-  <img src="https://img.shields.io/packagephobia/install-size/taskforce-aiagent" alt="install size">
-</a>
   <a href="https://taskforce-aiagent.github.io/taskforce-aiagent/">
   <img src="https://img.shields.io/badge/docs-latest-blue" alt="docs">
 </a>
@@ -28,7 +29,8 @@
   
 </p>
 
-**TaskForce** is a modular, open, and production-ready TypeScript framework for orchestrating LLM-powered autonomous AI agents, task pipelines, dynamic toolchains, RAG workflows, and memory/retrieval systems.  
+**TaskForce** is a modular, open, and production-ready TypeScript framework for orchestrating LLM-powered autonomous AI agents, task pipelines, dynamic toolchains, RAG workflows, and memory/retrieval systems.
+
 It is designed for real-world use-cases such as document analysis, automation, agent collaboration, enterprise search, and more.
 
 > **Docs:**  
