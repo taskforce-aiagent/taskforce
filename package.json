@@ -35,7 +35,7 @@
   ],
   "author": "TaskForce Contributors - Marcoaras",
   "license": "MIT",
-  "description": "Core agent framework for building autonomous AI agents, tasks, and workflows.",
+  "description": "TaskForce is a modular, open-source, production-ready TypeScript agent framework for orchestrating AI agents, LLM-powered autonomous agents, task pipelines, dynamic toolchains, RAG workflows and memory/retrieval systems.",
   "devDependencies": {
     "@types/chalk": "^0.4.31",
     "@types/jest": "^29.5.14",

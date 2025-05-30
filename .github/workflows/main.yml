@@ -22,14 +22,14 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      # Coverage ve test
+      # Coverage test
       - name: Run tests with coverage
         run: OPENAI_API_KEY="dummy" npm run test:coverage
 
-      # Codecov yükleme
+      # Codecov install
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Eğer public repo ise bu satırı kaldırabilirsin!
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
           fail_ci_if_error: true
