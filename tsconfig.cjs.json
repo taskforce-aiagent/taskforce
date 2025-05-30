@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS", // ✅ CJS uyumlu
+    "module": "CommonJS",
     "moduleResolution": "node",
     "target": "ES2020",
     "declaration": false,

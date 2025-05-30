@@ -1,4 +1,4 @@
-/** jest.config.ts */
+// jest.config.ts
 import { createDefaultPreset } from "ts-jest";
 
 const tsJestTransformCfg = createDefaultPreset().transform;
@@ -12,4 +12,17 @@ export default {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov"],
+
+  // Bunu EKLE:
+  extensionsToTreatAsEsm: [".ts"],
+
+  // Aşağıdaki ayarı da ekle, ESM testleri sorunsuz çözsün:
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
+  },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
 };
