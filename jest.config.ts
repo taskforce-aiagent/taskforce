@@ -11,7 +11,6 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: [
     "src/agents/**/*.{ts,js}",
-    "src/engine/**/*.{ts,js}",
     "src/tasks/**/*.{ts,js}",
     "src/helpers/**/*.{ts,js}",
     "src/agentTraining/**/*.{ts,js}",

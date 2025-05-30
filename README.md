@@ -16,12 +16,16 @@
   <a href="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent">
     <img src="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent/branch/main/graph/badge.svg" alt="coverage">
   </a>
-  <a href="https://github.com/marcoaras">
-    <img src="https://img.shields.io/badge/creator-marcoaras-blue?logo=github" alt="creator">
-  </a>
+  <a href="https://packagephobia.com/result?p=taskforce-aiagent">
+  <img src="https://img.shields.io/packagephobia/install-size/taskforce-aiagent" alt="install size">
+</a>
   <a href="https://taskforce-aiagent.github.io/taskforce-aiagent/">
   <img src="https://img.shields.io/badge/docs-latest-blue" alt="docs">
 </a>
+  <a href="https://github.com/marcoaras">
+    <img src="https://img.shields.io/badge/creator-marcoaras-blue?logo=github" alt="creator">
+  </a>
+  
 </p>
 
 **TaskForce** is a modular, open, and production-ready TypeScript framework for orchestrating LLM-powered autonomous AI agents, task pipelines, dynamic toolchains, RAG workflows, and memory/retrieval systems.  
