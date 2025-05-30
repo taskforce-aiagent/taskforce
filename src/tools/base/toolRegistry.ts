@@ -25,7 +25,7 @@ const toolMap = new Map<string, RegisteredTool>();
 export class ToolRegistry {
   /**
    * Register a tool in the global registry.
-   * If a tool with the same id or name exists, throws an error (safety).
+   * If a tool with the same id or name exists, return.
    */
   static register(
     toolInstance: Tool,
@@ -33,11 +33,7 @@ export class ToolRegistry {
     source: string = "built-in"
   ) {
     if (toolMap.has(toolInstance.id) || toolMap.has(toolInstance.name)) {
-      throw new Error(
-        `Tool with id or name '${
-          toolInstance.id || toolInstance.name
-        }' already registered.`
-      );
+      return;
     }
     toolMap.set(toolInstance.id, {
       id: toolInstance.id,
