@@ -273,11 +273,67 @@ ToolRegistry.register(new DirectoryReadTool(), "file", "built-in");
 
 ## 🤝 Contributing
 
+### How to contribute:
+
 We welcome contributions! If you'd like to add a new tool, suggest a feature, or report a bug:
 
 - Fork this repository and submit a pull request (PR)
 - Open an [issue](https://github.com/your-repo-url/issues) for feedback or feature requests
-- See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines
+
+* **Add new tools** and help with tool registry extensibility.
+* **Write/expand test cases** for tool and agent orchestration logic.
+* **Document edge-case behaviors** (unexpected tool/agent inputs, LLM or API errors, etc.).
+* **Propose architecture enhancements** (memory, planning, evaluation).
+* **Suggest and demo integrations** (UI, REST/gRPC, notebook, SaaS, etc.).
+* **Review and improve docs** to help new users and developers onboard smoothly.
+
+> **Have an idea or improvement? Open an issue or PR and help shape the future of TaskForce!** > _Contributions are welcome!_ For bug reports or suggestions, please open an issue or pull request.
+
+_See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to get started!_
+
+---
+
+## 🚦 Roadmap
+
+The following priorities are open for contribution and community feedback. If you have suggestions, ideas, or solutions for any of these, please join as a contributor!
+
+- [ ] **Full end-to-end demo projects**
+      Real-world demo workflows and scenario-based documentation (with code).
+
+- [ ] **UI/API layer and live orchestration**
+      Integrated dashboards for live monitoring, dynamic agent/task management, and REST/gRPC API endpoints.
+
+- [ ] **Tool coverage & comprehensive testing**
+
+  - Write/test cases for all built-in tools (unit, integration, edge cases).
+  - Ensure parameterized tool usage (e.g., constructor options like `BraveSearchTool({ useScrapeLinksAfterSearch: true })`) is covered with examples and tests.
+  - Automated tool compatibility matrix: which tools work with which agents, models, and memory backends.
+
+- [ ] **Advanced Tool Registry and plugin ecosystem**
+
+  - Allow easy registration and sharing of custom tools via the registry.
+  - Support for tool versioning and marketplace-style discovery.
+  - Encourage contributions of community-built tools.
+
+- [ ] **Hybrid/multi-source RAG and advanced memory demos**
+
+  - Combine multiple retrievers in a single workflow (e.g., internal + web + database).
+  - Examples and patterns for hybrid agent memory strategies.
+
+- [ ] **Test coverage, edge-case management, and error handling**
+
+  - Robust handling of tool errors, timeouts, and malformed inputs.
+  - Coverage reporting with badges (Codecov).
+
+- [ ] **Dynamic prompt chaining, AI-driven orchestration, and agent self-evaluation**
+
+  - Let agents evaluate and replan their own task pipelines.
+  - Deep prompt composition and dynamic context injection.
+
+- [ ] **Contributor-driven improvements**
+
+  - If you spot a gap in tool behavior, documentation, or testing, open an issue or PR!
+  - If you find an integration problem (API, vector DB, embedding, file parsing, etc.), propose a fix or example.
 
 ---
 
@@ -294,7 +350,3 @@ _Created by [marcoaras](https://github.com/marcoaras)_
 - [agent.md](./docs/en/agent.md) ・ [tool.md](./docs/en/tool.md) ・ [tool-list.md](./docs/en/tool-list.md) ・ [taskForce.md](./docs/en/taskForce.md)
 - [task.md](./docs/en/task.md) ・ [memory.md](./docs/en/memory.md) ・ [retrieval.md](./docs/en/retrieval.md)
 - [fine-tuning.md](./docs/en/fine-tuning.md)・ [openai-fine-tuning.md](./docs/en/openai-fine-tuning.md) ・ [smartManagerAgent.md](./docs/en/smartManagerAgent.md)
-
----
-
-> _Contributions are welcome!_ For bug reports or suggestions, please open an issue or pull request.

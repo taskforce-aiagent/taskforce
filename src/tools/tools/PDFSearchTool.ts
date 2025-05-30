@@ -1,6 +1,6 @@
 import { Tool, InputSchema, LLMToolParameter } from "../base/baseTool.js";
 import fs from "fs";
-import pdfParse from "pdf-parse";
+import { PdfReader } from "pdfreader";
 
 export class PDFSearchTool extends Tool {
   id = "pdf_search_tool";
@@ -28,18 +28,34 @@ export class PDFSearchTool extends Tool {
   examples = ["Find paragraphs in contract.pdf containing LLM"];
 
   async handler(args: { file: string; query: string }): Promise<string> {
-    try {
-      const fileBuffer = fs.readFileSync(args.file);
-      const data = await pdfParse(fileBuffer);
-      const paragraphs = data.text
-        .split("\n")
-        .filter((p) => p.toLowerCase().includes(args.query.toLowerCase()));
-      if (!paragraphs.length) return "No matches found.";
-      return paragraphs.slice(0, 5).join("\n---\n");
-    } catch (err: any) {
-      return this.errorHandler
-        ? this.errorHandler(err)
-        : `Error searching PDF: ${err.message}`;
-    }
+    return new Promise((resolve, reject) => {
+      const lines: string[] = [];
+      let currentLine = "";
+      const queryLower = args.query.toLowerCase();
+
+      new PdfReader().parseFileItems(args.file, (err: any, item: any) => {
+        if (err) {
+          return resolve(
+            this.errorHandler
+              ? this.errorHandler(err)
+              : `Error searching PDF: ${err.message}`
+          );
+        }
+        if (!item) {
+          const matches = lines.filter((line) =>
+            line.toLowerCase().includes(queryLower)
+          );
+          if (matches.length === 0) return resolve("No matches found.");
+          return resolve(matches.slice(0, 5).join("\n---\n"));
+        }
+        if (item.text) {
+          currentLine += item.text;
+        }
+        if (item && item.text === undefined && currentLine) {
+          lines.push(currentLine.trim());
+          currentLine = "";
+        }
+      });
+    });
   }
 }

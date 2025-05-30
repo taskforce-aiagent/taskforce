@@ -9,6 +9,7 @@ pnpm-debug.log*
 .env.*
 coverage/
 *.tsbuildinfo
+package-lock.json
 
 # IDE/editor
 .vscode/

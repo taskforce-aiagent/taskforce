@@ -64,7 +64,7 @@
     "lru-cache": "^11.1.0",
     "mammoth": "^1.9.1",
     "openai": "^4.103.0",
-    "pdf-parse": "^1.1.1",
+    "pdfreader": "^3.0.7",
     "pg": "^8.16.0",
     "puppeteer": "^24.9.0",
     "readline-sync": "^1.4.10",
@@ -77,10 +77,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taskforce-aiagent/taskforce.git"
+    "url": "git+https://github.com/taskforce-aiagent/taskforce-aiagent.git"
   },
   "bugs": {
-    "url": "https://github.com/taskforce-aiagent/taskforce/issues"
+    "url": "https://github.com/taskforce-aiagent/taskforce-aiagent/issues"
   },
-  "homepage": "https://github.com/taskforce-aiagent/taskforce#readme"
+  "homepage": "https://github.com/taskforce-aiagent/taskforce-aiagent#readme"
 }
