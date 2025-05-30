@@ -10,11 +10,11 @@
   <a href="https://github.com/taskforce-aiagent/taskforce-aiagent/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/taskforce-aiagent/taskforce-aiagent" alt="license">
   </a>
-  <a href="https://github.com/taskforce-aiagent/taskforce-aiagent/actions">
+  <a href="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent/branch/main/graph/badge.svg">
     <img src="https://img.shields.io/github/actions/workflow/status/taskforce-aiagent/taskforce-aiagent/main.yml?branch=main" alt="build status">
   </a>
   <a href="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent">
-    <img src="https://img.shields.io/codecov/c/github/taskforce-aiagent/taskforce-aiagent" alt="coverage">
+    <img src="https://codecov.io/gh/taskforce-aiagent/taskforce-aiagent/branch/main/graph/badge.svg" alt="coverage">
   </a>
   <a href="https://github.com/marcoaras">
     <img src="https://img.shields.io/badge/creator-marcoaras-blue?logo=github" alt="creator">
