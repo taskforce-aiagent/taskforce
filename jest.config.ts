@@ -12,11 +12,7 @@ export default {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov"],
-
-  // Bunu EKLE:
   extensionsToTreatAsEsm: [".ts"],
-
-  // Aşağıdaki ayarı da ekle, ESM testleri sorunsuz çözsün:
   globals: {
     "ts-jest": {
       useESM: true,
@@ -25,4 +21,5 @@ export default {
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 };
