@@ -13,10 +13,10 @@ export const baseModelTokenLimits: Record<string, number> = {
 
 export function normalizeOutput(text: string): string {
   return text
-    .replace(/\s{2,}/g, " ") // 2 veya daha fazla boşluğu tek boşluk yap
-    .replace(/\n{2,}/g, "\n") // 2 veya daha fazla satır boşluğunu tek satıra indir
-    .replace(/[ \t]+\n/g, "\n") // Satır sonundaki boşlukları sil
-    .trim(); // Baştaki ve sondaki boşlukları temizle
+    .replace(/\s{2,}/g, " ")
+    .replace(/\n{2,}/g, "\n")
+    .replace(/[ \t]+\n/g, "\n")
+    .trim();
 }
 
 export function checkDelegate(output: string): boolean {
@@ -46,28 +46,23 @@ export function normalizeInput(input: string): string {
         .join(", ");
     }
   } catch {
-    return input.replace(/\{.*?\}/g, "").trim();
+    return input
+      .replace(/\{.*?\}/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
   }
-
   return input;
 }
 
 export function cleanMarkdownJson(raw: string): string {
   let cleaned = raw.trim();
 
-  // 1. Başta '```json' veya '```' varsa kaldır
   cleaned = cleaned.replace(/^```json\s*\n?/, "");
   cleaned = cleaned.replace(/^```\s*\n?/, "");
-
-  // 2. Sonda '```' varsa kaldır
   cleaned = cleaned.replace(/\n*```$/, "");
-
-  // 3. Eğer içerikte başka yerde '```json' veya '```' varsa onları da kaldır
-  // (Bunu isteğe bağlı yapabilirsin, eğer JSON içinde bulunmuyorsa)
   cleaned = cleaned.replace(/```json/g, "");
   cleaned = cleaned.replace(/```/g, "");
 
-  // 4. En son trimle
   cleaned = cleaned.trim();
 
   return cleaned;
@@ -88,26 +83,21 @@ export function parseCSV(output: string): any[] {
 
 export function parseXML(output: string): any {
   try {
-    // Eğer ortam node ise xml2js kullanılmalı, burada örnek:
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(output, "application/xml");
-    // Burada xmlDoc DOM nesnesi olarak döner, ihtiyaca göre işlenmeli
     return xmlDoc;
   } catch {
     return output;
   }
 }
 
-export function cleanFinalContext(
-  finalContext: Record<string, any>
-): Record<string, any> {
-  // Kopya oluştur
-  const cleaned = { ...finalContext };
+export function cleanFinalContext(finalContext: any): any {
+  if (typeof finalContext !== "object" || finalContext === null)
+    return finalContext;
 
-  // Temizle
+  const cleaned = { ...finalContext };
   delete cleaned.__replanReason__;
   delete cleaned.__replanCount__;
-
   return cleaned;
 }
 

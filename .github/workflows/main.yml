@@ -24,7 +24,7 @@ jobs:
 
       # Coverage ve test
       - name: Run tests with coverage
-        run: npm run test:coverage
+        run: OPENAI_API_KEY="dummy" npm run test:coverage
 
       # Codecov yükleme
       - name: Upload coverage to Codecov

@@ -28,3 +28,5 @@ jest-*
 # Build artifacts
 build/
 out/
+
+logs/

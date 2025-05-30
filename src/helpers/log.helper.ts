@@ -8,7 +8,7 @@ if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-let activeLogFile: string | null = null;
+export let activeLogFile: string | null = null;
 
 export function initializeTaskforceLogFile() {
   const timestamp = new Date()

@@ -29,7 +29,7 @@ import {
   TrainingExample,
 } from "../agentTraining/agentTraining.types.js";
 import readline from "readline-sync";
-import { OpenAI } from "openai"; // openai npm paketi
+import { OpenAI } from "openai";
 import { EventEmitter } from "events";
 import path from "path";
 import dotenv from "dotenv";
@@ -90,6 +90,7 @@ export class TaskForce extends EventEmitter {
     this.enableAIPlanning = config.enableAIPlanning ?? true;
     this.retriever = config.retriever;
 
+    // Validate task dependencies
     const allTaskIds = new Set(this.tasks.map((t) => t.id));
     for (const task of this.tasks) {
       if (task.inputFromTask && !allTaskIds.has(task.inputFromTask)) {
@@ -108,13 +109,13 @@ export class TaskForce extends EventEmitter {
       }
     });
 
-    // 🧠 Global memory aktifse agent'lara varsayılan memory bağla
+    // Attach memory to agents if global memory is enabled
     if (this.memory) {
       for (const agent of this.agents) {
         if (!agent.memoryScope || agent.memoryScope === MemoryScope.None)
           continue;
 
-        // ✅ Yalnızca memory daha önce dışarıdan atanmadıysa bağla
+        // Attach memory only if not externally set
         if (!agent.memoryProvider && !(agent as any).memoryInitialized) {
           if (agent.memoryScope === MemoryScope.Short) {
             agent.memoryProvider = MemoryProvider(
@@ -238,7 +239,6 @@ export class TaskForce extends EventEmitter {
 
     finalContext = cleanFinalContext(finalContext);
 
-    // Ek olarak çalışan görev id'lerini döndürmek istersen:
     return {
       result: finalContext,
       executedTaskIds,
@@ -255,7 +255,6 @@ export class TaskForce extends EventEmitter {
 
     for (const [taskId, output] of Object.entries(finalContext)) {
       if (typeof output === "string") {
-        // 1. Klasik DELEGATE(...) kontrolü
         if (output.includes("please provide") || output.includes("DELEGATE(")) {
           if (this.verbose) {
             TFLog(
@@ -266,8 +265,6 @@ export class TaskForce extends EventEmitter {
           finalContext.__replanReason__ = `System Check: Unresolved output in task '${taskId}'`;
           return this.replanRun(finalContext, isParallel);
         }
-
-        // 2. JSON-stringify yapılmış __delegate__ nesnesi varsa
         try {
           const parsed = JSON.parse(output);
           if (parsed?.__delegate__) {
@@ -281,12 +278,12 @@ export class TaskForce extends EventEmitter {
             return this.replanRun(finalContext, isParallel);
           }
         } catch {
-          // output JSON değilse yoksay
+          // ignore
         }
       }
     }
 
-    // 3. Manager Agent'ın genel değerlendirmesi
+    // General review by the Manager Agent
     const review = await this.managerAgent!.reviewFinalOutput(finalContext);
 
     if (review.action === "replan") {
@@ -380,7 +377,7 @@ export class TaskForce extends EventEmitter {
     const filteredTaskPlan = taskPlan.filter((t) => replanSet.has(t.id));
     const filteredContext = { ...context };
 
-    // Başarılı taskların çıktısını koru
+    // Save the outputs of successful tasks
     for (const [key, value] of Object.entries(inputs)) {
       if (!replanSet.has(key)) {
         filteredContext[key] = value;
@@ -399,9 +396,12 @@ export class TaskForce extends EventEmitter {
       : await this.runHierarchicalFiltered(filteredTaskPlan, filteredContext);
   }
 
-  async runSequential(inputs: Record<string, string>): Promise<string> {
+  async runSequential(
+    inputs: Record<string, string>
+  ): Promise<Record<string, any>> {
     let result = "";
     let taskIndex = 0;
+    let results: Record<string, any> = {};
 
     while (taskIndex < this.tasks.length) {
       const task = this.tasks[taskIndex];
@@ -462,16 +462,16 @@ export class TaskForce extends EventEmitter {
         );
         result = delegateResult;
 
-        // 🔁 Zinciri delegeden itibaren yeniden başlat
+        // restart chain from the delegated agent
         taskIndex = this.tasks.findIndex((t) => t.agent === agent.name) + 1;
         continue;
       }
-
+      results[task.id] = output;
       result = output;
       taskIndex++;
     }
 
-    return result;
+    return results;
   }
 
   private async runHierarchicalFiltered(
@@ -492,7 +492,6 @@ export class TaskForce extends EventEmitter {
       } else if (task.agent) {
         assignedAgent = task.agent;
       } else {
-        // Eğer agent atanmadıysa manager ile atama yap
         assignedAgent = await this.managerAgent!.assignAgent(task, this.agents);
         if (!assignedAgent) {
           throw new Error(`Failed to assign agent for task '${task.name}'`);
@@ -560,7 +559,6 @@ export class TaskForce extends EventEmitter {
       return new Promise<{ key: string; value: string }>(async (resolve) => {
         const taskKey = task.inputFromTask;
 
-        // Eğer bu task başka bir task'a bağlıysa, onun outputunu bekle
         if (taskKey && !context[taskKey]) {
           await new Promise<void>((waitForInput) => {
             if (!contextReady.has(taskKey)) {
@@ -614,7 +612,6 @@ export class TaskForce extends EventEmitter {
           context[task.id] = finalOutput;
         }
 
-        // Bu task bitti. Ona bağlı bekleyen tasklar varsa uyandır
         if (contextReady.has(task.id)) {
           for (const resolveFn of contextReady.get(task.id)!) {
             resolveFn();
@@ -714,7 +711,6 @@ export class TaskForce extends EventEmitter {
 
       const toolResult = await tool.handler(toolInput);
 
-      // Tool output çok uzunsa özetle
       let summarized = toolResult;
       if (typeof toolResult === "string" && toolResult.length > 1000) {
         try {
@@ -785,7 +781,7 @@ export class TaskForce extends EventEmitter {
 
     taskPlan = this.topologicalSortTasks(taskPlan);
 
-    // 🧹 Reset internal replan flags
+    // Reset internal replan flags
     for (const task of taskPlan) {
       if ("__replanReasonUsed" in task) {
         delete (task as any).__replanReasonUsed;
@@ -838,8 +834,6 @@ export class TaskForce extends EventEmitter {
     const rawInput = task.inputMapper
       ? task.inputMapper(sourceTaskOutput)
       : sourceTaskOutput;
-
-    // 💡 Eğer çok uzunsa kes
     return typeof rawInput === "string" && rawInput.length > 3000
       ? rawInput.slice(0, 3000) + "\n\n[...truncated]"
       : rawInput;
@@ -1342,5 +1336,21 @@ export class TaskForce extends EventEmitter {
         `\n✅ Training complete for ${agent.name}. Saved to ${outPath}`
       );
     }
+  }
+
+  public getTaskById(id: string): Task | undefined {
+    return this.tasks.find((t) => t.id === id);
+  }
+
+  public listTaskNames(): string[] {
+    return this.tasks.map((t) => t.name);
+  }
+
+  public getAgentByName(name: string): Agent | undefined {
+    return this.agents.find((a) => a.name === name);
+  }
+
+  public listAgentNames(): string[] {
+    return this.agents.map((a) => a.name);
   }
 }

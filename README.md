@@ -34,9 +34,11 @@ It is designed for real-world use-cases such as document analysis, automation, a
 ---
 
 <div align="center">
-
-![TaskForce Agent Framework](./docs/taskforce.png)
-
+  <img
+    src="./docs/taskforce.png"
+    alt="TaskForce AI Agent Framework"
+    style="display: block; border-radius: 24px; max-width: 100%; height: auto; margin: 0 auto;"
+  />
 </div>
 
 ---
