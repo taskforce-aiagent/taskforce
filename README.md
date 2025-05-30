@@ -295,6 +295,9 @@ We welcome contributions! If you'd like to add a new tool, suggest a feature, or
 * **Suggest and demo integrations** (UI, REST/gRPC, notebook, SaaS, etc.).
 * **Review and improve docs** to help new users and developers onboard smoothly.
 
+> **_Important note:_**
+> TaskForce is an open-source initiative developed independently. As with any evolving project, there might be areas to improve or refine. Your contributions, feedback, and ideas are highly encouraged to help ensure continuous improvement and growth.
+
 > **Have an idea or improvement? Open an issue or PR and help shape the future of TaskForce!** > _Contributions are welcome!_ For bug reports or suggestions, please open an issue or pull request.
 
 _See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to get started!_
