@@ -1,4 +1,5 @@
 export { Agent } from "./agents/agent.js";
+export { SmartManagerAgent } from "./agents/smartManagerAgent.js";
 export { Tool } from "./tools/base/baseTool.js";
 export type { InputSchema, LLMToolParameter } from "./tools/base/baseTool.js";
 export { ToolRegistry } from "./tools/base/toolRegistry.js";
