@@ -37,6 +37,8 @@ export class ToolExecutor {
   private buildDetailedParameterBlock(tool: Tool): string {
     if (!tool.parameters?.properties) return "";
 
+    const topLevelRequired = tool.parameters.required ?? [];
+
     const plural =
       Object.keys(tool.parameters.properties).length > 1
         ? "Parameters"
@@ -45,27 +47,37 @@ export class ToolExecutor {
     const renderField = (
       key: string,
       def: LLMToolParameterField,
-      indent: number = 2
+      indent: number = 2,
+      parentRequired: string[] = []
     ): string => {
       const pad = " ".repeat(indent);
-      let line = `${pad}- ${key} (${def.type})`;
+      const isRequired = parentRequired.includes(key);
+      let line = `${pad}- ${key} (${def.type})${
+        isRequired ? " [required]" : ""
+      }`;
       if (def.description) line += `: ${def.description}`;
 
       if (def.type === "object" && def.properties) {
+        const nestedRequired = def.required ?? [];
         const nested = Object.entries(def.properties)
-          .map(([k, v]) => renderField(k, v, indent + 2))
+          .map(([k, v]) => renderField(k, v, indent + 2, nestedRequired))
           .join("\n");
         line += `\n${nested}`;
       } else if (def.type === "array" && def.items) {
         line += `\n${pad}  items:`;
-        line += `\n${renderField("item", def.items, indent + 4)}`;
+        line += `\n${renderField(
+          "item",
+          def.items,
+          indent + 4,
+          def.items.required ?? []
+        )}`;
       }
 
       return line;
     };
 
     const lines = Object.entries(tool.parameters.properties).map(([k, v]) =>
-      renderField(k, v)
+      renderField(k, v, 2, topLevelRequired)
     );
 
     return ` - ${plural}:\n${lines.join("\n")}`;
