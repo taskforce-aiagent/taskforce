@@ -1,14 +1,15 @@
 export type LLMToolParameter = {
   type: "object";
-  properties: Record<
-    string,
-    {
-      type: "string" | "number" | "boolean" | "object" | "array";
-      description?: string;
-      example?: any;
-    }
-  >;
+  properties: Record<string, LLMToolParameterField>;
   required?: string[];
+};
+
+export type LLMToolParameterField = {
+  type: "string" | "number" | "boolean" | "object" | "array";
+  description?: string;
+  example?: any;
+  properties?: Record<string, LLMToolParameterField>; // for nested object support
+  items?: LLMToolParameterField; // for array of items
 };
 
 export type InputSchema = {
