@@ -1,4 +1,5 @@
-import chalk, { ChalkInstance } from "chalk";
+import chalk from "chalk";
+import { Chalk } from "chalk";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -23,7 +24,7 @@ export function initializeTaskforceLogFile() {
   activeLogFile = filePath;
 }
 
-export function TFLog(message: string, chalk?: ChalkInstance) {
+export function TFLog(message: string, chalk?: Chalk) {
   const timestamp = new Date().toISOString();
   const fullMessage = `[${timestamp}] ${message}\n`;
   // Terminale yaz
