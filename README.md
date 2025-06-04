@@ -23,8 +23,15 @@
   <a href="https://taskforce-aiagent.github.io/taskforce-aiagent/">
   <img src="https://img.shields.io/badge/docs-latest-blue" alt="docs">
 </a>
+<br/ >
   <a href="https://github.com/marcoaras">
     <img src="https://img.shields.io/badge/creator-marcoaras-blue?logo=github" alt="creator">
+  </a>
+   <a href="https://github.com/jeudomos">
+    <img src="https://img.shields.io/badge/creator-jeudomos-white?logo=github" alt="creator">
+  </a>
+   <a href="https://github.com/pribrahimsari">
+    <img src="https://img.shields.io/badge/creator-pribrahimsari-red?logo=github" alt="creator">
   </a>
   
 </p>
@@ -279,7 +286,7 @@ ToolRegistry.register(new DirectoryReadTool(), "file", "built-in");
 
 ---
 
-## 🤝 Contributing
+## 🤝 Collaborator
 
 ### How to contribute:
 
@@ -300,7 +307,12 @@ We welcome contributions! If you'd like to add a new tool, suggest a feature, or
 
 > **Have an idea or improvement? Open an issue or PR and help shape the future of TaskForce!** > _Contributions are welcome!_ For bug reports or suggestions, please open an issue or pull request.
 
-_See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to get started!_
+
+| GitHub | Role |
+|--------|------|
+| [@marcoaras](https://github.com/marcoaras) | Creator & Maintainer |
+| [@jeudomos](https://github.com/jeudomos) | Creator & Maintainer |
+| [@pribrahimsari](https://github.com/pribrahimsari) | Creator & Maintainer |
 
 ---
 
