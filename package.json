@@ -1,6 +1,6 @@
 {
   "name": "taskforce-aiagent",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
@@ -52,12 +52,13 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.57",
     "@langchain/openai": "^0.5.10",
     "@mozilla/readability": "^0.6.0",
+    "@octokit/rest": "^19.0.7",
     "apify": "^3.4.2",
     "axios": "^1.9.0",
     "chalk": "^4.1.2",
-    "@octokit/rest": "^19.0.7",
     "cheerio": "^1.0.0",
     "chromadb": "^2.4.4",
     "chromadb-default-embed": "^2.14.0",
