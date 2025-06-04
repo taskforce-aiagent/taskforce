@@ -10,6 +10,7 @@ export type LLMToolParameterField = {
   example?: any;
   properties?: Record<string, LLMToolParameterField>; // for nested object support
   items?: LLMToolParameterField; // for array of items
+  required?: string[];
 };
 
 export type InputSchema = {
