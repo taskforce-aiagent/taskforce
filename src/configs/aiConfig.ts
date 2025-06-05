@@ -80,24 +80,20 @@ const builtInModels: Record<string, LLMRoute> = {
 
   "gemini-1.5-pro": {
     apiKey: process.env.GEMINI_API_KEY!,
-    baseUrl:
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
     model: {
       name: "gemini-1.5-pro",
       provider: SupportedModelProvider.GEMINI,
-      supportsTools: false,
+      supportsTools: true,
       maxContextTokens: baseModelTokenLimits["gemini-1.5-pro"] || 1000000,
     },
   },
 
   "gemini-1.5-flash": {
     apiKey: process.env.GEMINI_API_KEY!,
-    baseUrl:
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
     model: {
       name: "gemini-1.5-flash",
       provider: SupportedModelProvider.GEMINI,
-      supportsTools: false,
+      supportsTools: true,
       maxContextTokens: baseModelTokenLimits["gemini-1.5-flash"] || 2000000,
     },
   },
