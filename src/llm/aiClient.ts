@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { aiConfig } from "../configs/aiConfig.js";
 import { toAIToolSchema } from "../tools/toolWorker/toolAdapter.js";
 import { TFLog } from "../helpers/log.helper.js";
@@ -315,25 +316,98 @@ async function callAIModelFunc(
     }
 
     case "gemini": {
-      const res = await fetch(config.baseUrl!, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${config.apiKey!}`,
-        },
-        body: JSON.stringify({
-          contents: messages.map((m) => ({
-            role: m.role,
-            parts: [{ text: m.content }],
-          })),
-        }),
+      const genAI = new GoogleGenerativeAI(config.apiKey!);
+      const model = genAI.getGenerativeModel({
+        model: config.model.name,
       });
 
-      const json = await res.json();
-      const content =
-        json?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        json?.candidates?.[0]?.content?.text;
-      return content || "";
+      const geminiMessages = messages.map((msg) => ({
+        role: msg.role,
+        parts: [{ text: msg.content }],
+      }));
+
+      const generationConfig = {
+        temperature: modelOptions.temperature ?? 0.7,
+        topP: modelOptions.top_p ?? 1,
+        maxOutputTokens: modelOptions.max_tokens ?? 2048,
+      };
+
+      const rawTools = tools?.length
+        ? toAIToolSchema(config.model, tools) || []
+        : [];
+      const functionDeclarations = rawTools.map(
+        ({ __originalTool__, ...tool }) => {
+          const fn = tool.function!;
+          return {
+            name: fn.name,
+            description: fn.description,
+            parameters: fn.parameters,
+          };
+        }
+      );
+
+      const toolMap = rawTools.reduce((acc, tool: any) => {
+        if (tool.function?.name && tool.__originalTool__) {
+          acc[tool.function.name] = tool.__originalTool__;
+        }
+        return acc;
+      }, {} as Record<string, Tool>);
+
+      if (verbose && functionDeclarations.length) {
+        TFLog(
+          `🛠️ [LLM] Passing ${functionDeclarations.length} tools`,
+          chalk.yellow
+        );
+      }
+
+      const result = await model.generateContent({
+        contents: geminiMessages,
+        generationConfig,
+        tools: functionDeclarations.length
+          ? [{ functionDeclarations }]
+          : undefined,
+      });
+
+      const responseText =
+        result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+      const parts = result.response?.candidates?.[0]?.content?.parts || [];
+
+      const functionCalls = parts
+        .map((p: any) => p.functionCall)
+        .filter((fc) => !!fc);
+
+      if (functionCalls?.length && toolMap) {
+        const outputs: ChatCompletionToolMessageParam[] = [];
+
+        for (const call of functionCalls) {
+          const tool = toolMap[call.name];
+          if (!tool) continue;
+
+          const args = call.args;
+          if (verbose) {
+            TFLog(`🧠 [LLM] Calling Tool '${call.name}'`, chalk.yellow);
+            TFLog(`Args: ${JSON.stringify(args, null, 2)}`, chalk.white);
+          }
+
+          const output = await tool.handler(args);
+
+          if (verbose) {
+            TFLog(`🧠 [LLM] Tool Result '${call.name}'`, chalk.yellow);
+            TFLog(`Output: ${output}`, chalk.white);
+          }
+
+          outputs.push({
+            role: "tool",
+            tool_call_id: call.name,
+            content: output,
+          });
+        }
+
+        return outputs.map((o) => o.content).join("\n") || responseText;
+      }
+
+      return responseText;
     }
 
     default:
