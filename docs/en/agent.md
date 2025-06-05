@@ -13,6 +13,7 @@ An Agent is an AI unit with a specific role and goal, capable of performing task
 | goal                | `string`                                         | The agent's main goal or objective. Used in prompts.                                                      | ✔️       |
 | backstory           | `string`                                         | The agent's background or character. Adds context to prompts.                                             | ✔️       |
 | model               | `SupportedModel \| string`                       | The LLM model to use (e.g., GPT-4, GPT-3.5, custom).                                                      |          |
+| modelOptions        | `GenerationOptions`                              | Generation settings like temperature, max_tokens, etc. Can override defaults per model or agent.          |          |
 | tools               | `Tool[] \| (() => Tool)[] \| (new () => Tool)[]` | Tools the agent can use. Can be provided as functions, classes, or instances.                             |          |
 | guardrails          | `string[]`                                       | Rules or constraints the agent must follow.                                                               |          |
 | memoryScope         | `MemoryScope`                                    | Memory scope: None, Short, Long, Session, etc.                                                            |          |
@@ -23,6 +24,39 @@ An Agent is an AI unit with a specific role and goal, capable of performing task
 | trained             | `AgentTrainingResult`                            | Information loaded from fine-tuning or custom training.                                                   |          |
 | taskForce           | `TaskForce`                                      | Reference to the TaskForce the agent belongs to (optional, usually set automatically).                    |          |
 | autoTruncateHistory | `boolean`                                        | If true, automatically truncates message history to fit within the model's token limit. Default is false. |          |
+
+---
+
+## Generation Options Compatibility
+
+The `GenerationOptions` object allows you to customize the behavior of the LLM for each agent. However, not all models support all options. Below is a compatibility matrix:
+
+| Option               | Description                                               | Supported Models                                       |
+| -------------------- | --------------------------------------------------------- | ------------------------------------------------------ |
+| `temperature`        | Controls randomness. Lower is more deterministic.         | ✅ All models                                          |
+| `top_p`              | Nucleus sampling. Limits the token selection probability. | ✅ Most OpenAI models, Claude, Gemini Pro/Flash        |
+| `max_tokens`         | Limits the number of output tokens.                       | ✅ All models                                          |
+| `frequency_penalty`  | Reduces repetition of frequent tokens.                    | ✅ OpenAI models                                       |
+| `presence_penalty`   | Encourages introducing new tokens.                        | ✅ OpenAI models                                       |
+| `stop`               | Specifies stop sequences for early cutoff.                | ✅ All models except Claude (currently ignores `stop`) |
+| `repetition_penalty` | Penalizes repeated phrases.                               | ✅ DeepSeek, LLaMA, Mixtral, open models               |
+| `top_k`              | Token sampling from top-k probabilities.                  | ✅ Local models like Meta LLaMA, Mixtral               |
+
+### Supported Models Summary
+
+| Model                 | Notes                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------ |
+| `gpt-4o`, `gpt-3.5`   | Fully supports all `GenerationOptions`                                               |
+| `claude-3-sonnet`     | Supports `temperature`, `top_p`, but ignores `stop`, `presence_penalty`, etc.        |
+| `claude-3-haiku`      | Same as above; lightweight version, slightly faster                                  |
+| `gemini-1.5-pro`      | Supports `temperature`, `top_p`, `max_tokens`; some fine control may be undocumented |
+| `gemini-1.5-flash`    | Same as above; faster, cheaper                                                       |
+| `deepseek-chat`       | Supports `temperature`, `top_p`, `top_k`, `repetition_penalty`                       |
+| `mixtral-8x7b`        | Best used with `top_k`, `repetition_penalty`, `temperature`                          |
+| `local-meta-llama`    | Same as above                                                                        |
+| `local-hermes-writer` | Supports `temperature`, `top_k`, `repetition_penalty`                                |
+
+> ⚠️ Unsupported options are silently ignored by most APIs. For full control, prefer OpenAI or Claude models.
 
 ---
 
@@ -51,6 +85,10 @@ export const plannerAgent = new Agent({
   goal: "Create an SEO-focused content plan.",
   backstory: "You are an expert content planner.",
   model: SupportedModel.GPT_3_5_TURBO,
+  modelOptions: {
+    temperature: 0.7,
+    max_tokens: 1000,
+  },
   tools: [BraveSearchTool],
   guardrails: [
     "Respond only in English.",
@@ -77,6 +115,7 @@ export const plannerAgent = new Agent({
 - **goal:** The agent's main objective. Provides context to the LLM when performing tasks.
 - **backstory:** The agent's character or background. Especially useful for role-play or expertise scenarios.
 - **model:** The LLM model used by the agent. Can be set globally or per agent.
+- **modelOptions:** Overrides generation parameters such as temperature or top_p. If omitted, defaults from aiConfig are used.
 - **tools:** Tools the agent can use. Can include external APIs, search engines, web scraping, etc.
 - **guardrails:** Rules the agent must follow. Can include constraints like language or information accuracy.
 - **memoryScope & memoryProvider:** The agent's memory management. Flexible options for short/long-term memory, local or external vector DBs.

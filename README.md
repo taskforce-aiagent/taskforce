@@ -92,6 +92,9 @@ TELEMETRY_MODE="append" # append | overwrite | none
 # API Keys
 OPENAI_API_KEY="your-openai-key"
 DEEPSEEK_API_KEY="your-deepseek-key"
+ANTHROPIC_API_KEY="your-anthropic-key"
+GEMINI_API_KEY="your-gemini-key"
+MISTRAL_API_KEY="your-mistral-key"
 BRAVE_API_KEY="your-brave-key"
 SERPAPI_API_KEY="your-serpapi-key"
 
@@ -307,11 +310,10 @@ We welcome contributions! If you'd like to add a new tool, suggest a feature, or
 
 > **Have an idea or improvement? Open an issue or PR and help shape the future of TaskForce!** > _Contributions are welcome!_ For bug reports or suggestions, please open an issue or pull request.
 
-
-| GitHub | Role |
-|--------|------|
-| [@marcoaras](https://github.com/marcoaras) | Creator & Maintainer |
-| [@jeudomos](https://github.com/jeudomos) | Creator & Maintainer |
+| GitHub                                             | Role                 |
+| -------------------------------------------------- | -------------------- |
+| [@marcoaras](https://github.com/marcoaras)         | Creator & Maintainer |
+| [@jeudomos](https://github.com/jeudomos)           | Creator & Maintainer |
 | [@pribrahimsari](https://github.com/pribrahimsari) | Creator & Maintainer |
 
 ---

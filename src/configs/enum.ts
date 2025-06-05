@@ -46,12 +46,21 @@ export enum SupportedModel {
   DEEPSEEK_CHAT = "deepseek-chat",
   LOCAL_META_LLAMA = "local-meta-llama",
   LOCAL_HERMES_WRITER = "local-hermes-writer",
+  CLAUDE_3_HAIKU = "claude-3-haiku",
+  CLAUDE_3_SONNET = "claude-3-sonnet",
+  CLAUDE_3_OPUS = "claude-3-opus",
+  GEMINI_1_5_PRO = "gemini-1.5-pro",
+  GEMINI_1_5_FLASH = "gemini-1.5-flash",
+  MIXTRAL_8X7B = "mixtral-8x7b",
 }
 
 export enum SupportedModelProvider {
   OPENAI = "openai",
   DEEPSEEK = "deepseek",
   LOCAL = "local",
+  ANTHROPIC = "anthropic",
+  GEMINI = "gemini",
+  MISTRAL = "mistral",
 }
 
 export enum FineTunableModel {

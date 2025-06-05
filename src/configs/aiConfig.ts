@@ -56,6 +56,51 @@ const builtInModels: Record<string, LLMRoute> = {
       maxContextTokens: baseModelTokenLimits["deepseek-chat"] || 16000,
     },
   },
+  "claude-3-haiku": {
+    apiKey: process.env.ANTHROPIC_API_KEY!,
+    baseUrl: "https://api.anthropic.com/v1/messages",
+    model: {
+      name: "claude-3-haiku",
+      provider: SupportedModelProvider.ANTHROPIC,
+      supportsTools: false,
+      maxContextTokens: baseModelTokenLimits["claude-3-haiku"] || 200000,
+    },
+  },
+
+  "claude-3-opus": {
+    apiKey: process.env.ANTHROPIC_API_KEY!,
+    baseUrl: "https://api.anthropic.com/v1/messages",
+    model: {
+      name: "claude-3-opus",
+      provider: SupportedModelProvider.ANTHROPIC,
+      supportsTools: false,
+      maxContextTokens: baseModelTokenLimits["claude-3-opus"] || 200000,
+    },
+  },
+
+  "gemini-1.5-pro": {
+    apiKey: process.env.GEMINI_API_KEY!,
+    baseUrl:
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+    model: {
+      name: "gemini-1.5-pro",
+      provider: SupportedModelProvider.GEMINI,
+      supportsTools: false,
+      maxContextTokens: baseModelTokenLimits["gemini-1.5-pro"] || 1000000,
+    },
+  },
+
+  "gemini-1.5-flash": {
+    apiKey: process.env.GEMINI_API_KEY!,
+    baseUrl:
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+    model: {
+      name: "gemini-1.5-flash",
+      provider: SupportedModelProvider.GEMINI,
+      supportsTools: false,
+      maxContextTokens: baseModelTokenLimits["gemini-1.5-flash"] || 2000000,
+    },
+  },
   "local-meta-llama": {
     baseUrl: "http://localhost:1234/v1/chat/completions",
     model: {

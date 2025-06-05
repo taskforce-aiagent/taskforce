@@ -7,11 +7,71 @@ import { Tool } from "../tools/base/baseTool.js";
 import { ChatCompletionToolMessageParam } from "../configs/enum.js";
 import { SupportedModel } from "../configs/enum.js";
 import { recordLLMCall } from "../helpers/telemetry.helper.js";
+import { modelGenerationDefaults } from "./modelsDefaultOptions.js";
+
+/**
+ * Options to control LLM generation behavior.
+ * Not all options are supported by all models.
+ */
+export interface GenerationOptions {
+  /**
+   * Controls randomness of outputs. Lower = more deterministic (e.g., 0.2), higher = more creative (e.g., 0.8)
+   *
+   * @default 0.7
+   * @supportedBy GPT-3.5, GPT-4, GPT-4o, Claude 3, Gemini 1.5 Pro/Flash, Mistral, Local LLaMA, DeepSeek
+   */
+  temperature?: number;
+
+  /**
+   * Controls nucleus sampling (top-p sampling). Value between 0 and 1. Common values: 0.9 or 0.95
+   *
+   * @default 0.95
+   * @supportedBy GPT-3.5, GPT-4, GPT-4o, Claude 3, Gemini 1.5 Pro/Flash, Mistral, Local LLaMA, DeepSeek
+   */
+  top_p?: number;
+
+  /**
+   * Maximum number of tokens in the output.
+   *
+   * @default Varies by model
+   * @supportedBy All models (with model-specific limits)
+   */
+  max_tokens?: number;
+
+  /**
+   * Penalizes repeated content. Positive values (0.1–1.0) encourage diversity.
+   *
+   * @default 0
+   * @supportedBy GPT-3.5, GPT-4, GPT-4o, DeepSeek, Mistral, Local LLaMA
+   * @notSupportedBy Claude 3, Gemini
+   */
+  presence_penalty?: number;
+
+  /**
+   * Penalizes tokens based on frequency. Positive values reduce repetition.
+   *
+   * @default 0
+   * @supportedBy GPT-3.5, GPT-4, GPT-4o, DeepSeek, Mistral, Local LLaMA
+   * @notSupportedBy Claude 3, Gemini
+   */
+  frequency_penalty?: number;
+}
 
 export type ChatMessage = {
   role: "system" | "user" | "assistant";
   content: string;
 };
+
+function getMergedGenerationOptions(
+  modelName: SupportedModel | string,
+  userOptions?: GenerationOptions
+): GenerationOptions {
+  const defaults = modelGenerationDefaults[modelName] || {};
+  return {
+    ...defaults,
+    ...userOptions,
+  };
+}
 
 /**
  * Wraps callAIModel with telemetry recording if TELEMETRY=true.
@@ -21,14 +81,22 @@ export async function callAIModel(
   modelName: SupportedModel | string,
   messages: ChatMessage[],
   verbose: boolean = false,
-  tools?: Tool[]
+  tools?: Tool[],
+  modelOptions: GenerationOptions = {}
 ): Promise<string> {
+  const mergedOptions = getMergedGenerationOptions(modelName, modelOptions);
   if (process.env.TELEMETRY_MODE === "none") {
-    return callAIModelFunc(modelName, messages, verbose, tools);
+    return callAIModelFunc(modelName, messages, verbose, tools, mergedOptions);
   }
 
   const startTime = Date.now();
-  const result = await callAIModelFunc(modelName, messages, verbose, tools);
+  const result = await callAIModelFunc(
+    modelName,
+    messages,
+    verbose,
+    tools,
+    mergedOptions
+  );
   const duration = Date.now() - startTime;
 
   // Approximate token usage
@@ -42,7 +110,8 @@ async function callAIModelFunc(
   modelName: SupportedModel | string,
   messages: ChatMessage[],
   verbose: boolean = false,
-  tools?: Tool[]
+  tools?: Tool[],
+  modelOptions: GenerationOptions = {}
 ): Promise<string> {
   const config = aiConfig[modelName];
   if (!config) throw new Error(`Model '${modelName}' not defined in llmConfig`);
@@ -66,7 +135,11 @@ async function callAIModelFunc(
             openai.chat.completions.create({
               model: config.model.name,
               messages,
-              temperature: 0.7,
+              temperature: modelOptions.temperature || 0.7,
+              top_p: modelOptions.top_p || 1,
+              max_tokens: modelOptions.max_tokens || 2048,
+              presence_penalty: modelOptions.presence_penalty || 0,
+              frequency_penalty: modelOptions.frequency_penalty || 0,
               tools: openAITools,
               tool_choice: "auto",
             }),
@@ -136,7 +209,11 @@ async function callAIModelFunc(
                   },
                   ...toolResult,
                 ],
-                temperature: 0.7,
+                temperature: modelOptions.temperature || 0.7,
+                top_p: modelOptions.top_p || 1,
+                max_tokens: modelOptions.max_tokens || 2048,
+                presence_penalty: modelOptions.presence_penalty || 0,
+                frequency_penalty: modelOptions.frequency_penalty || 0,
               }),
             3,
             1000,
@@ -153,7 +230,11 @@ async function callAIModelFunc(
             openai.chat.completions.create({
               model: config.model.name,
               messages,
-              temperature: 0.7,
+              temperature: modelOptions.temperature || 0.7,
+              top_p: modelOptions.top_p || 1,
+              max_tokens: modelOptions.max_tokens || 2048,
+              presence_penalty: modelOptions.presence_penalty || 0,
+              frequency_penalty: modelOptions.frequency_penalty || 0,
             }),
           3,
           1000,
@@ -173,7 +254,11 @@ async function callAIModelFunc(
         body: JSON.stringify({
           model: config.model,
           messages,
-          temperature: 0.7,
+          temperature: modelOptions.temperature || 0.7,
+          top_p: modelOptions.top_p || 1,
+          max_tokens: modelOptions.max_tokens || 2048,
+          presence_penalty: modelOptions.presence_penalty || 0,
+          frequency_penalty: modelOptions.frequency_penalty || 0,
         }),
       });
       const json = await res.json();
@@ -189,12 +274,66 @@ async function callAIModelFunc(
         body: JSON.stringify({
           model: config.model.name,
           messages,
-          temperature: 0.7,
+          temperature: modelOptions.temperature || 0.7,
+          top_p: modelOptions.top_p || 1,
+          max_tokens: modelOptions.max_tokens || 2048,
+          presence_penalty: modelOptions.presence_penalty || 0,
+          frequency_penalty: modelOptions.frequency_penalty || 0,
         }),
       });
 
       const json = await res.json();
       return json.choices?.[0]?.message?.content || "";
+    }
+
+    case "anthropic": {
+      const res = await fetch(config.baseUrl!, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": config.apiKey!,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: config.model.name,
+          messages: messages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+          temperature: modelOptions.temperature || 0.7,
+          top_p: modelOptions.top_p || 1,
+          max_tokens: modelOptions.max_tokens || 2048,
+          presence_penalty: modelOptions.presence_penalty || 0,
+          frequency_penalty: modelOptions.frequency_penalty || 0,
+        }),
+      });
+
+      const json = await res.json();
+      return (
+        json?.content?.[0]?.text || json?.choices?.[0]?.message?.content || ""
+      );
+    }
+
+    case "gemini": {
+      const res = await fetch(config.baseUrl!, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${config.apiKey!}`,
+        },
+        body: JSON.stringify({
+          contents: messages.map((m) => ({
+            role: m.role,
+            parts: [{ text: m.content }],
+          })),
+        }),
+      });
+
+      const json = await res.json();
+      const content =
+        json?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        json?.candidates?.[0]?.content?.text;
+      return content || "";
     }
 
     default:
