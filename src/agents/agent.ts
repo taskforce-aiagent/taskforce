@@ -1,4 +1,8 @@
-import { callAIModel, ChatMessage } from "../llm/aiClient.js";
+import {
+  callAIModel,
+  ChatMessage,
+  GenerationOptions,
+} from "../llm/aiClient.js";
 import { getLLMModelByName, LLMModel } from "../configs/aiConfig.js";
 import { ToolExecutor } from "../tools/toolWorker/toolExecutor.js";
 import {
@@ -34,6 +38,19 @@ export class Agent {
   public goal: string;
   public backstory: string;
   public model?: SupportedModel | string;
+  /**
+   * @param modelOptions Generation options for the underlying LLM (e.g., temperature, top_p, etc.)
+   * @example
+   * modelOptions: {
+   *   temperature: 0.2,
+   *   top_p: 0.95
+   * }
+   *
+   * @note These settings may be ignored if the selected model does not support them. For best compatibility, use OpenAI models like gpt-4 or gpt-3.5.
+   *
+   * @see See full compatibility chart in docs/agents/README.md#generation-options-compatibility
+   */
+  public modelOptions?: GenerationOptions;
   public tools?: (Tool | (new () => Tool) | (() => Tool))[];
   public guardrails?: string[];
   public memoryScope?: MemoryScope;
@@ -61,6 +78,7 @@ export class Agent {
     goal: string;
     backstory: string;
     model?: SupportedModel | string;
+    modelOptions?: GenerationOptions;
     tools?: (Tool | (new () => Tool) | (() => Tool))[];
     guardrails?: string[];
     memoryScope?: MemoryScope;
@@ -77,6 +95,7 @@ export class Agent {
     this.goal = agent.goal;
     this.backstory = agent.backstory;
     this.model = agent.model;
+    this.modelOptions = agent.modelOptions;
     this.guardrails = agent.guardrails;
     this.systemPrompt = agent.systemPrompt;
     this.allowDelegation = agent.allowDelegation ?? false;
@@ -267,7 +286,8 @@ export class Agent {
       this.model || process.env.DEFAULT_MODEL!,
       safeMessages,
       this.verbose,
-      this.llmModel.supportsTools && this.canUseTools() ? this.agentTools : []
+      this.llmModel.supportsTools && this.canUseTools() ? this.agentTools : [],
+      this.modelOptions
     );
 
     if (this.verbose) {
@@ -301,7 +321,9 @@ export class Agent {
           this.name,
           this.model || process.env.DEFAULT_MODEL!,
           safeMessages,
-          this.verbose
+          this.verbose,
+          [],
+          this.modelOptions
         );
 
         return secondOutput;
