@@ -83,7 +83,7 @@ const builtInModels: Record<string, LLMRoute> = {
     model: {
       name: "gemini-1.5-pro",
       provider: SupportedModelProvider.GEMINI,
-      supportsTools: true,
+      supportsTools: false,
       maxContextTokens: baseModelTokenLimits["gemini-1.5-pro"] || 1000000,
     },
   },
@@ -93,7 +93,7 @@ const builtInModels: Record<string, LLMRoute> = {
     model: {
       name: "gemini-1.5-flash",
       provider: SupportedModelProvider.GEMINI,
-      supportsTools: true,
+      supportsTools: false,
       maxContextTokens: baseModelTokenLimits["gemini-1.5-flash"] || 2000000,
     },
   },

@@ -317,14 +317,31 @@ async function callAIModelFunc(
 
     case "gemini": {
       const genAI = new GoogleGenerativeAI(config.apiKey!);
-      const model = genAI.getGenerativeModel({
-        model: config.model.name,
-      });
+      const model = genAI.getGenerativeModel({ model: config.model.name });
 
-      const geminiMessages = messages.map((msg) => ({
-        role: msg.role,
-        parts: [{ text: msg.content }],
-      }));
+      function mergeSystemAndUserMessages(messages: ChatMessage[]) {
+        let systemPrompt = "";
+
+        const nonSystemMessages = messages.filter((msg) => {
+          if (msg.role === "system") {
+            systemPrompt += msg.content.trim() + "\n\n";
+            return false;
+          }
+          return true;
+        });
+
+        const mergedMessages = nonSystemMessages.map((msg, index) => {
+          const prefix = index === 0 && systemPrompt ? systemPrompt : "";
+          return {
+            role: msg.role,
+            parts: [{ text: prefix + msg.content }],
+          };
+        });
+
+        return mergedMessages;
+      }
+
+      const geminiMessages = mergeSystemAndUserMessages(messages);
 
       const generationConfig = {
         temperature: modelOptions.temperature ?? 0.7,
@@ -332,82 +349,88 @@ async function callAIModelFunc(
         maxOutputTokens: modelOptions.max_tokens ?? 2048,
       };
 
-      const rawTools = tools?.length
-        ? toAIToolSchema(config.model, tools) || []
-        : [];
-      const functionDeclarations = rawTools.map(
-        ({ __originalTool__, ...tool }) => {
-          const fn = tool.function!;
-          return {
-            name: fn.name,
-            description: fn.description,
-            parameters: fn.parameters,
-          };
-        }
-      );
-
-      const toolMap = rawTools.reduce((acc, tool: any) => {
-        if (tool.function?.name && tool.__originalTool__) {
-          acc[tool.function.name] = tool.__originalTool__;
-        }
-        return acc;
-      }, {} as Record<string, Tool>);
-
-      if (verbose && functionDeclarations.length) {
-        TFLog(
-          `🛠️ [LLM] Passing ${functionDeclarations.length} tools`,
-          chalk.yellow
+      // Eğer tools destekleniyorsa
+      if (config.model.supportsTools && tools?.length) {
+        const rawTools = toAIToolSchema(config.model, tools) || [];
+        const functionDeclarations = rawTools.map(
+          ({ __originalTool__, ...tool }) => {
+            const fn = tool.function!;
+            return {
+              name: fn.name,
+              description: fn.description,
+              parameters: fn.parameters,
+            };
+          }
         );
+
+        const toolMap = rawTools.reduce((acc, tool: any) => {
+          if (tool.function?.name && tool.__originalTool__) {
+            acc[tool.function.name] = tool.__originalTool__;
+          }
+          return acc;
+        }, {} as Record<string, Tool>);
+
+        if (verbose) {
+          TFLog(
+            `🛠️ [LLM] Passing ${functionDeclarations.length} tools`,
+            chalk.yellow
+          );
+        }
+
+        const result = await model.generateContent({
+          contents: geminiMessages,
+          generationConfig,
+          tools: [{ functionDeclarations }],
+        });
+
+        const parts = result.response?.candidates?.[0]?.content?.parts || [];
+        const functionCalls = parts
+          .map((p: any) => p.functionCall)
+          .filter((fc) => !!fc);
+        const responseText = parts
+          .map((p: any) => p.text)
+          .filter(Boolean)
+          .join("\n");
+
+        if (functionCalls.length && toolMap) {
+          const outputs: ChatCompletionToolMessageParam[] = [];
+
+          for (const call of functionCalls) {
+            const tool = toolMap[call.name];
+            if (!tool) continue;
+
+            const args = call.args;
+            if (verbose) {
+              TFLog(`🧠 [LLM] Calling Tool '${call.name}'`, chalk.yellow);
+              TFLog(`Args: ${JSON.stringify(args, null, 2)}`, chalk.white);
+            }
+
+            const output = await tool.handler(args);
+
+            if (verbose) {
+              TFLog(`🧠 [LLM] Tool Result '${call.name}'`, chalk.yellow);
+              TFLog(`Output: ${output}`, chalk.white);
+            }
+
+            outputs.push({
+              role: "tool",
+              tool_call_id: call.name,
+              content: output,
+            });
+          }
+
+          return outputs.map((o) => o.content).join("\n") || responseText;
+        }
+
+        return responseText;
       }
 
       const result = await model.generateContent({
         contents: geminiMessages,
         generationConfig,
-        tools: functionDeclarations.length
-          ? [{ functionDeclarations }]
-          : undefined,
       });
 
-      const responseText =
-        result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-      const parts = result.response?.candidates?.[0]?.content?.parts || [];
-
-      const functionCalls = parts
-        .map((p: any) => p.functionCall)
-        .filter((fc) => !!fc);
-
-      if (functionCalls?.length && toolMap) {
-        const outputs: ChatCompletionToolMessageParam[] = [];
-
-        for (const call of functionCalls) {
-          const tool = toolMap[call.name];
-          if (!tool) continue;
-
-          const args = call.args;
-          if (verbose) {
-            TFLog(`🧠 [LLM] Calling Tool '${call.name}'`, chalk.yellow);
-            TFLog(`Args: ${JSON.stringify(args, null, 2)}`, chalk.white);
-          }
-
-          const output = await tool.handler(args);
-
-          if (verbose) {
-            TFLog(`🧠 [LLM] Tool Result '${call.name}'`, chalk.yellow);
-            TFLog(`Output: ${output}`, chalk.white);
-          }
-
-          outputs.push({
-            role: "tool",
-            tool_call_id: call.name,
-            content: output,
-          });
-        }
-
-        return outputs.map((o) => o.content).join("\n") || responseText;
-      }
-
-      return responseText;
+      return result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     }
 
     default:
