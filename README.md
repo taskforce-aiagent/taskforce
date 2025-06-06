@@ -289,11 +289,13 @@ ToolRegistry.register(new DirectoryReadTool(), "file", "built-in");
 
 ---
 
-## 🤝 Collaborator
+## 🤝 Contribute
 
 ### How to contribute:
 
-We welcome contributions! If you'd like to add a new tool, suggest a feature, or report a bug:
+We welcome contributions! Please check our [contributing guidelines](./CONTRIBUTING.md) help make Taskforce more accessible.
+
+If you'd like to add a new tool, suggest a feature, or report a bug:
 
 - Fork this repository and submit a pull request (PR)
 - Open an [issue](https://github.com/your-repo-url/issues) for feedback or feature requests
@@ -315,6 +317,15 @@ We welcome contributions! If you'd like to add a new tool, suggest a feature, or
 | [@marcoaras](https://github.com/marcoaras)         | Creator & Maintainer |
 | [@jeudomos](https://github.com/jeudomos)           | Creator & Maintainer |
 | [@pribrahimsari](https://github.com/pribrahimsari) | Creator & Maintainer |
+
+
+[![Star History Chart](https://api.star-history.com/svg?repos=taskforce-aiagent/taskforce-aiagent&type=Timeline)](https://star-history.com/#taskforce-aiagent/taskforce-aiagent&Date)
+
+---
+
+## ❤️ Contributors
+
+[![taskforce contributors](https://contrib.rocks/image?repo=taskforce-aiagent/taskforce-aiagent)](https://github.com/taskforce-aiagent/taskforce-aiagent/graphs/contributors)
 
 ---
 
